@@ -18,6 +18,7 @@ def MakeRequest(urlString):
     with open(fileName, "wb") as marketFile:
         marketFile.write(marketPage.read())
     marketFile.close()
+    print("Wrote to", fileName)
 
 MakeHourlyRequest()
 

@@ -6,7 +6,7 @@ import glob
 
 def parseFile(fileName, df, scrapingTime):
     print("Parsing", fileName)
-    marketFile = open(fileName, "r")
+    marketFile = open(fileName, "rb")
     marketParser = BeautifulSoup(marketFile.read(), "html.parser")
     marketFile.close()
 
@@ -22,12 +22,14 @@ def parseFile(fileName, df, scrapingTime):
         currencyPrice = currencyRow.find("td", {"class" : "cmc-table__cell cmc-table__cell--sortable cmc-table__cell--right cmc-table__cell--sort-by__price"}).find("a", {"class" : "cmc-link"}).text.replace(",", "").replace("$","")
         currencyMarketCap = currencyRow.find("td", {"class" : "cmc-table__cell cmc-table__cell--sortable cmc-table__cell--right cmc-table__cell--sort-by__market-cap"}).text.replace(",", "").replace("$", "")
         currencySupply = currencyRow.find("td", {"class" : "cmc-table__cell cmc-table__cell--sortable cmc-table__cell--right cmc-table__cell--sort-by__circulating-supply"}).find("div").text.replace(" * ", "")
+        currencyAddress = currencyRow.find("td", {"class" : "cmc-table__cell cmc-table__cell--sticky cmc-table__cell--sortable cmc-table__cell--left cmc-table__cell--sort-by__name"}).find("a", {"class" : "cmc-link"})["href"]
         df = df.append({
             'time' : scrapingTime,
             'name' : currencyName,
             'price' : currencyPrice,
             'marketCap' : currencyMarketCap,
-            'supply' : currencySupply
+            'supply' : currencySupply,
+            'link' : currencyAddress
         }, ignore_index = True)
 
     return(df)
